@@ -1,11 +1,15 @@
 const express = require("express");
 const app = express();
 const PORT = 8080;
+
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json"); // Importar el archivo JSON
+
 const { dbConnection } = require("./config/config")
 
 app.use(express.json())
 
-app.use("/player",require("./routes/player"))
+app.use("/players",require("./routes/players"))
 
 
 dbConnection()

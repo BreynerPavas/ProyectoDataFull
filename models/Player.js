@@ -4,10 +4,10 @@ const mongoose = require('mongoose');
 const PlayerSchema = new mongoose.Schema({
     //esperar los datos de cada jugador
 
-    nombre: String,
-    equipo: String, // ???
-    salario: Number,
-    dorsal:Number,
+    name: String,
+    team: String, // ???
+    salary: Number,
+    number:Number,
     //pueden haber mas atributos
 }, { timestamps: true });
 
