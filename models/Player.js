@@ -4,13 +4,16 @@ const mongoose = require('mongoose');
 const PlayerSchema = new mongoose.Schema({
     //esperar los datos de cada jugador
 
-    name: String,
-    team: String, // ???
-    salary: Number,
-    number:Number,
+    short_name: String,
+    player_id:Number,
+
+    club_name: String, // ???
+    value_eur: Number,
+    overall:Number,
     //pueden haber mas atributos
 }, { timestamps: true });
 
+PlayerSchema.index({ short_name: "text" });
   
 const Player = mongoose.model('Player', PlayerSchema);
 

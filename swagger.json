@@ -1,9 +1,9 @@
 {
     "openapi": "3.0.0",
     "info": {
-      "title": "Task API",
+      "title": "Player API",
       "version": "1.0.0",
-      "description": "API for managing tasks"
+      "description": "API for managing player information"
     },
     "servers": [
       {
@@ -12,127 +12,48 @@
       }
     ],
     "paths": {
-      "/tasks/create": {
-        "post": {
-          "summary": "Create a new task",
-          "tags": ["Tasks"],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "title": {
-                      "type": "string"
-                    },
-                    "completed": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": ["title"]
-                }
-              }
-            }
-          },
-          "responses": {
-            "201": {
-              "description": "Task created successfully",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Task"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/tasks": {
+      "/": {
         "get": {
-          "summary": "Get all tasks",
-          "tags": ["Tasks"],
+          "summary": "Get all players paginated",
+          "tags": ["Players"],
+          "parameters": [
+            {
+              "name": "page",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "default": 1
+              },
+              "description": "Page number for pagination"
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "default": 10
+              },
+              "description": "Number of players per page"
+            }
+          ],
           "responses": {
             "200": {
-              "description": "List of tasks",
+              "description": "List of players",
               "content": {
                 "application/json": {
                   "schema": {
                     "type": "array",
                     "items": {
-                      "$ref": "#/components/schemas/Task"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/tasks/id/{_id}": {
-        "get": {
-          "summary": "Get a task by ID",
-          "tags": ["Tasks"],
-          "parameters": [
-            {
-              "name": "_id",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "description": "The task ID"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Task details",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Task"
-                  }
-                }
-              },
-              "404": {
-                "description": "Task not found"
-              }
-            }
-          }
-        }
-      },
-      "/tasks/title/{title}": {
-        "get": {
-          "summary": "Search tasks by title",
-          "tags": ["Tasks"],
-          "parameters": [
-            {
-              "name": "title",
-              "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              },
-              "description": "The title or part of the title to search for"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Tasks matching the search query",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/Task"
+                      "$ref": "#/components/schemas/Player"
                     }
                   }
                 }
               }
             },
             "500": {
-              "description": "Error while searching tasks",
+              "description": "Error fetching players",
               "content": {
                 "application/json": {
                   "schema": {
@@ -140,7 +61,7 @@
                     "properties": {
                       "message": {
                         "type": "string",
-                        "example": "Error fetching tasks"
+                        "example": "Error fetching players"
                       }
                     }
                   }
@@ -150,10 +71,10 @@
           }
         }
       },
-      "/tasks/update/id/{_id}": {
-        "put": {
-          "summary": "Update a task by ID",
-          "tags": ["Tasks"],
+      "/id/{_id}": {
+        "get": {
+          "summary": "Get a player by ID",
+          "tags": ["Players"],
           "parameters": [
             {
               "name": "_id",
@@ -162,50 +83,57 @@
               "schema": {
                 "type": "string"
               },
-              "description": "The ID of the task to update"
+              "description": "The player's ID"
             }
           ],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "title": {
-                      "type": "string"
-                    },
-                    "completed": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": []
-                }
-              }
-            }
-          },
           "responses": {
             "200": {
-              "description": "Task updated successfully",
+              "description": "Player details",
               "content": {
                 "application/json": {
                   "schema": {
-                    "type": "object",
-                    "properties": {
-                      "message": {
-                        "type": "string",
-                        "example": "post successfully updated"
-                      },
-                      "task": {
-                        "$ref": "#/components/schemas/Task"
-                      }
-                    }
+                    "$ref": "#/components/schemas/Player"
                   }
                 }
               }
             },
             "404": {
-              "description": "Task not found",
+              "description": "Player not found"
+            }
+          }
+        }
+      },
+      "/name/{short_name}": {
+        "get": {
+          "summary": "Search players by name",
+          "tags": ["Players"],
+          "parameters": [
+            {
+              "name": "short_name",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "The name or part of the name of the player"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Players matching the search query",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Player"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Error searching players",
               "content": {
                 "application/json": {
                   "schema": {
@@ -213,7 +141,7 @@
                     "properties": {
                       "message": {
                         "type": "string",
-                        "example": "Task not found"
+                        "example": "Error fetching players"
                       }
                     }
                   }
@@ -223,43 +151,38 @@
           }
         }
       },
-      "/tasks/delete/id/{_id}": {
-        "delete": {
-          "summary": "Delete a task by ID",
-          "tags": ["Tasks"],
+      "/mostValued": {
+        "get": {
+          "summary": "Get the 10 most valued players",
+          "tags": ["Players"],
           "parameters": [
             {
-              "name": "_id",
-              "in": "path",
-              "required": true,
+              "name": "limit",
+              "in": "query",
+              "required": false,
               "schema": {
-                "type": "string"
+                "type": "integer",
+                "default": 10
               },
-              "description": "The ID of the task to delete"
+              "description": "Number of players to retrieve"
             }
           ],
           "responses": {
             "200": {
-              "description": "Task deleted successfully",
+              "description": "Top valued players",
               "content": {
                 "application/json": {
                   "schema": {
-                    "type": "object",
-                    "properties": {
-                      "message": {
-                        "type": "string",
-                        "example": "Task deleted"
-                      },
-                      "task": {
-                        "$ref": "#/components/schemas/Task"
-                      }
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Player"
                     }
                   }
                 }
               }
             },
             "500": {
-              "description": "Error while deleting the task",
+              "description": "Error fetching players",
               "content": {
                 "application/json": {
                   "schema": {
@@ -267,7 +190,7 @@
                     "properties": {
                       "message": {
                         "type": "string",
-                        "example": "There was a problem trying to remove the task"
+                        "example": "Error fetching players"
                       }
                     }
                   }
@@ -280,22 +203,37 @@
     },
     "components": {
       "schemas": {
-        "Task": {
+        "Player": {
           "type": "object",
           "properties": {
-            "title": {
+            "short_name": {
               "type": "string",
-              "description": "The title of the task"
+              "description": "The name of the player"
             },
-            "completed": {
-              "type": "boolean",
-              "description": "Whether the task is completed"
+            "player_id": {
+              "type": "integer",
+              "description": "The unique ID of the player"
+            },
+            "club_name": {
+              "type": "string",
+              "description": "The club the player belongs to"
+            },
+            "value_eur": {
+              "type": "number",
+              "description": "The market value of the player in EUR"
+            },
+            "overall": {
+              "type": "number",
+              "description": "The overall rating of the player"
             }
           },
-          "required": ["title"],
+          "required": ["short_name", "player_id", "value_eur", "overall"],
           "example": {
-            "title": "Learn Swagger",
-            "completed": false
+            "short_name": "Lionel Messi",
+            "player_id": 12345,
+            "club_name": "Paris Saint-Germain",
+            "value_eur": 80000000,
+            "overall": 94
           }
         }
       }

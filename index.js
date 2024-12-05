@@ -10,7 +10,7 @@ const { dbConnection } = require("./config/config")
 app.use(express.json())
 
 app.use("/players",require("./routes/players"))
-
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 dbConnection()
 
