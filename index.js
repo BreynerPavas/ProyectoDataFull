@@ -15,3 +15,4 @@ app.use("/players",require("./routes/players"))
 dbConnection()
 
 app.listen(PORT, ()=> console.log(`Server started on port ${PORT}`));
+console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
